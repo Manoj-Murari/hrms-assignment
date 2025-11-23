@@ -1,0 +1,52 @@
+// server/prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String     @id @default(uuid())
+  name      String
+  users     User[]
+  employees Employee[]
+  teams     Team[]
+}
+
+model User {
+  id             String       @id @default(uuid())
+  email          String       @unique
+  password       String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  logs           AuditLog[]
+}
+
+model Employee {
+  id             String       @id @default(uuid())
+  name           String
+  role           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  teams          Team[]       @relation("EmployeeTeams")
+}
+
+model Team {
+  id             String       @id @default(uuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  employees      Employee[]   @relation("EmployeeTeams")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  details   String
+  timestamp DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}

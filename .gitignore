@@ -1,0 +1,18 @@
+# Dependencies
+node_modules
+*/node_modules
+
+# Environment variables
+.env
+*/.env
+
+# Build outputs
+dist
+build
+
+# Database (Don't push the actual DB file, but KEEP migrations!)
+*.db
+*.db-journal
+
+# OS files
+.DS_Store
